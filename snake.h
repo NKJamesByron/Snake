@@ -16,7 +16,6 @@ class Node
 public:
     int x;
     int y;
-
 };
 
 class Snake
@@ -33,6 +32,7 @@ private:
 
 public:
 
+    bool hard_s;
     int length;              //蛇的全长
 
     Snake(int w = 50, int h = 50);
@@ -42,10 +42,9 @@ public:
     bool IsDie(void);                           //判断蛇是否死了
     //bool IsGetPoint(void);
     void OutputSnake(vector<Node> & node,
-             Node & food);          //将当前的蛇的数据结构复制
+             Node & food);  //将当前的蛇的数据结构复制
                                     //到node及food中供其以各种形式输出
     void Clear();  //将数据结构清空
-
     //int point;
 private:
     void Judge(void);                //蛇每前进一步，对蛇的状态进行判断
