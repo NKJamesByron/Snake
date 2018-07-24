@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget * parent)
 {
 
     //this->resize(1000,800);
-    this->startTimer(1000);
+
 
         /*timer_0 = new QTimer(this);
         connect(timer_0,SIGNAL(timeout()),this,SLOT(qtimeSlot_0()));
@@ -27,15 +27,11 @@ MainWindow::MainWindow(QWidget * parent)
         //QLabel *label = new QLabel(this);
         //ui->label->move(510,0+MenuBarSize);
         //ui->label->resize(240,510);
+    this->startTimer(1000);
 
-    lb=new QLabel(this);
-    QFont ft;
-    ft.setPointSize(12);
-    lb->move(510,0+MenuBarSize);
-    lb->resize(240,510);
-    lb->setText(tr("     得分: 0"));
-    lb->setFont(ft);
-    lb->show();
+
+
+
 
 
     QTextCodec::setCodecForLocale(QTextCodec::codecForLocale());
@@ -43,6 +39,19 @@ MainWindow::MainWindow(QWidget * parent)
 
     MenuBarSize = 90;//菜单栏所占的位置
     setFixedSize(750,510+MenuBarSize);
+
+    lb=new QLabel(this);
+        QFont ft;
+        ft.setPointSize(12);
+        lb->move(510,0+MenuBarSize);
+        lb->resize(240,510);
+        lb->setText(tr("    得 分: 0分"));
+        lb->setFont(ft);
+        lb->setFont(QFont("关于游戏",14,QFont::Bold));
+        lb->setStyleSheet(tr("color:rgb(153,0,204);"
+                                "border-image:url(:/new/menu.jpg)"));
+        lb->show();
+
 
     dealMenu();
     IsDie = false;
@@ -82,6 +91,12 @@ MainWindow::~MainWindow()
 void MainWindow::timeout(void)
 {
     //int point_01 = 0;
+    if(hard_m == false) {
+        snake.hard_s = false;
+    } else {
+        snake.hard_s = true;
+    }
+
     if (bRun == false)
     {
         timer->stop();
@@ -121,7 +136,7 @@ void MainWindow::timeout(void)
 void MainWindow::paintEvent(QPaintEvent * event)
 {
     QPainter painter(this);
-    painter.setBrush(Qt::gray);
+    painter.setBrush(QColor::fromRgb(168,216,168));
     painter.drawRect(0, 0, size().width(), size().height());
     if (IsDie || !bRun)
     {
@@ -139,6 +154,15 @@ void MainWindow::paintEvent(QPaintEvent * event)
     painter.drawRect(0, 500+MenuBarSize, 510, 10); //下
     painter.drawRect(0, 0+MenuBarSize, 10, 510); //左
     painter.drawRect(500, 0+MenuBarSize, 10, 510); //右
+
+    if(hard_m == true) {
+
+        painter.drawRect(100,190,260,10);
+        painter.drawRect(150,490,260,10);
+        painter.drawRect(100,240,10,260);
+        painter.drawRect(400,190,10,260);
+    }
+
     //画蛇，蛇头跟蛇身用不同的颜色
     //蛇头
     painter.setBrush(Qt::yellow);
@@ -148,7 +172,7 @@ void MainWindow::paintEvent(QPaintEvent * event)
     int n = node.size();
     for (int i = 1; i < n; i++)
     {
-        //蛇身比蛇头小一点，这样每节之间有个间隙
+        //蛇身比蛇头小一点，这样每节之间有个间隙，看得清楚
         painter.drawRect(10*node[i].x, 10*node[i].y+MenuBarSize, 9, 9);
     }
     node.clear();
@@ -223,6 +247,13 @@ void MainWindow::dealMenu(void)
     connect(aboutGame, SIGNAL(triggered()), this, SLOT(showAbout()));
     //将菜单加入菜单栏
     menuBar->addMenu(helpMenu);
+
+    //toolBar->setStyleSheet(tr("border-image:url(:/new/white.jpg)"));
+    //toolBar->setStyleSheet(tr("background-color:rgb(0,170,153)"));
+    toolBar->setStyleSheet(tr("background-color:rgb(136,170,0)"));
+    //toolBar->setStyleSheet(tr("background-color:rgb(102,136,0)"));
+
+
 
     QAction *start_01 =new QAction;
     QIcon icon1(":/new/start.png");
@@ -336,4 +367,63 @@ void MainWindow::returnMenu(void)
     this->close();
     MenuWindow *m = new MenuWindow;
     m->show();
+}
+
+//void MainWindow::qtimeSlot_0(void){
+//   static int count=0;
+//                count++;
+                  //QLabel *label = new QLabel(this);
+                 // label->move(510,0+MenuBarSize);
+                  //label->resize(240,510);
+                 // QFont ft;
+                 // ft.setPointSize(15);
+                  //label->setFont(ft);
+                  //label->show();
+                  //label->setText(QString::number(count));
+                  //delete label;
+                  //label->show();
+                  //delete label;
+//            }
+/*void MainWindow::timerEvent(QTimerEvent *event){
+    static int sec=0;
+
+    sec++;
+
+    QLabel *label = new QLabel(this);
+    label->move(510,0+MenuBarSize);
+    label->resize(40,50);
+    QFont ft;
+    ft.setPointSize(15);
+    label->setFont(ft);
+   // label->show();
+    label->setText(QString::number(sec));
+    label->clear();
+    //label->releaseShortcut(sec);
+    //label->hide();
+    label->show();
+    update();
+
+
+}*/
+
+void MainWindow::timerEvent(QTimerEvent *event){
+    static int sec=0;
+       QTextEdit *text1=new QTextEdit(this);
+       text1->move(520,160+MenuBarSize);
+       text1->resize(340,30);
+       QFont ft1;ft1.setPointSize(12);text1->setFont(ft1);
+       //text1->setStyleSheet("QTextEdit {color:rgb(168,216,168);"
+         //                   "border-image:gray;}");
+       //text1->setStyleSheet(tr("QTextEdit {color:black;"
+         //                   "background-image: rgb(168,216,168);}"));
+
+
+       text1->setStyleSheet(tr("color:rgb(153,0,204);"
+                               "border-image:url(:/new/menu.jpg)"));
+       //text1->setStyleSheet(tr("border-image:url(:/new/menu.jpg)"));
+       text1->setText(tr("     时间：%1s").arg(sec++));
+
+       text1->setFont(QFont("关于游戏",14,QFont::Bold));
+       text1->show();
+
 }
