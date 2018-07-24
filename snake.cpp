@@ -8,7 +8,6 @@
 Snake::Snake(int  w, int  h)
 {
 
-    int point = 0;
 
     if (h > 0 || w > 0)
     {
@@ -48,12 +47,27 @@ void Snake::AddNode(const int & w, const int & h)
 void Snake::Judge(void)
 {
     //判断是否撞墙
-    if (SnakeNode[0].x == 0 || SnakeNode[0].x == width ||
-        SnakeNode[0].y == 0 || SnakeNode[0].y == height)
+    if(hard_s == false)
     {
-        die = true;
-        return;
+        if (SnakeNode[0].x == 0 || SnakeNode[0].x == 50 ||
+            SnakeNode[0].y == 0 || SnakeNode[0].y == 50)
+        {
+            die = true;
+            return;
+        }
+    }   else {
+        if (SnakeNode[0].x == 0 || SnakeNode[0].x == 50 ||
+            SnakeNode[0].y == 0 || SnakeNode[0].y == 50 ||
+                (SnakeNode[0].x >= 10 && SnakeNode[0].x <= 35 && SnakeNode[0].y == 10) ||
+                (SnakeNode[0].x >= 15 && SnakeNode[0].x <= 40 && SnakeNode[0].y == 40) ||
+                (SnakeNode[0].x == 10 && SnakeNode[0].y >= 15 && SnakeNode[0].y <= 40) ||
+                (SnakeNode[0].x == 40 && SnakeNode[0].y >= 10 && SnakeNode[0].y <= 35) )
+        {
+            die = true;
+            return;
+        }
     }
+
     //判断蛇是否跟自己相撞
     for (int i = 1; i < length; i++)
     {
@@ -69,9 +83,7 @@ void Snake::Judge(void)
 
 
 }
-
-//返回蛇的生死状态
-bool Snake::IsDie(void)
+bool Snake::IsDie(void)     //返回蛇的生死状态
 {
     return die;
 }
@@ -146,21 +158,45 @@ void Snake::PutFood(void)
     int x, y;
     bool empty = false;
     srand(time(NULL));
-    do
+    if(hard_s == false)
     {
-        empty = true;
-        x = rand()%(width-2) + 1;
-        y = rand()%(height-2) + 1;
-        for (int i = 0; i < length; i++)
+        do
         {
-            if (SnakeNode[i].x == x &&
-                SnakeNode[i].y == y)
+            empty = true;
+            x = rand()%(width-2) + 1;
+            y = rand()%(height-2) + 1;
+            for (int i = 0; i < length; i++)
             {
-                empty = false;
-                break;
+                if (SnakeNode[i].x == x &&
+                    SnakeNode[i].y == y)
+                {
+                    empty = false;
+                    break;
+                }
             }
-        }
-    }while (empty == false);
+        }while (empty == false);
+    } else {
+        do
+        {
+            empty = true;
+            x = rand()%(width-2) + 1;
+            y = rand()%(height-2) + 1;
+            for (int i = 0; i < length; i++)
+            {
+                if ((SnakeNode[i].x == x &&
+                    SnakeNode[i].y == y) ||
+                        (x >= 10 && x <= 36 && y == 10) ||
+                        (x >= 15 && x <= 41 && y == 40) ||
+                        (x == 10 && y >= 15 && y <= 41) ||
+                        (x == 40 && y >= 10 && y <= 36) )
+                {
+                    empty = false;
+                    break;
+                }
+            }
+        }while (empty == false);
+    }
+
     Food.x = x;
     Food.y = y;
 }
